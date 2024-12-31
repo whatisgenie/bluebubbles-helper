@@ -921,7 +921,7 @@ NSMutableArray* vettedAliases;
  */
 +(IMFileTransfer *) prepareFileTransferForAttachment:(NSURL *) originalPath filename:(NSString *) filename {
     // Creates the initial guid for the file transfer (cannot use for sending)
-    NSString *transferInitGuid = [[IMFileTransferCenter sharedInstance] guidForNewOutgoingTransferWithLocalURL:originalPath];
+    NSString *transferInitGuid = [[IMFileTransferCenter sharedInstance] guidForNewOutgoingTransferWithLocalURL:originalPath useLegacyGuid:YES];
     DLog("BLUEBUBBLESHELPER: Transfer GUID: %{public}@", transferInitGuid);
 
     // Creates the initial transfer object
@@ -996,7 +996,7 @@ NSMutableArray* vettedAliases;
         isAudioMessage = [data[@"isAudioMessage"] integerValue] == 1;
     }
     
-    BOOL ddScan = true;
+    BOOL ddScan = false;
     if (data[@"ddScan"] != [NSNull null]) {
         ddScan = [data[@"ddScan"] integerValue] == 1;
     }
@@ -1013,11 +1013,7 @@ NSMutableArray* vettedAliases;
             __strong typeof(messageToSend) strongMessage = messageToSend;
             __strong typeof(chat) strongChat = chat;
             
-            [[IMDDController sharedInstance]
-                scanMessage:strongMessage
-                     outgoing:YES
-                waitUntilDone:YES
-             completionBlock:^(NSInteger status, BOOL success, id result) {
+            [[IMDDController sharedInstance] scanMessage:strongMessage outgoing:TRUE waitUntilDone:TRUE completionBlock:^(NSInteger status, BOOL success, id result) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [strongChat sendMessage:(strongMessage)];
                     if (transaction != nil) {
