@@ -14,7 +14,6 @@
 @interface IMDDController : NSObject
 
 @property (retain, nonatomic) NSObject<OS_dispatch_queue> *scannerQueue; // ivar: _scannerQueue
-
 @property (nonatomic, readonly) dispatch_queue_t queue;
 
 +(id)sharedInstance;
@@ -26,8 +25,8 @@
 -(void)scanMessage:(id)arg0 completionBlock:(id)arg1 ;
 -(void)scanMessage:(id)arg0 outgoing:(BOOL)arg1 waitUntilDone:(BOOL)arg2 completionBlock:(id)arg3 ;
 
--(void)scanMessage:(id)arg0 outgoing:(BOOL)arg1 waitUntilDone:(BOOL)arg2 completionBlock:(id)arg3;
 
 @end
+
 
 #endif
