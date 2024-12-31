@@ -15,6 +15,7 @@
 
 @property (retain, nonatomic) NSObject<OS_dispatch_queue> *scannerQueue; // ivar: _scannerQueue
 
+@property (nonatomic, readonly) dispatch_queue_t queue;
 
 +(id)sharedInstance;
 -(BOOL)_scanAttributedStringWithMessage:(id)arg0 attributedString:(id)arg1 plainText:(id)arg2 ;
@@ -25,8 +26,8 @@
 -(void)scanMessage:(id)arg0 completionBlock:(id)arg1 ;
 -(void)scanMessage:(id)arg0 outgoing:(BOOL)arg1 waitUntilDone:(BOOL)arg2 completionBlock:(id)arg3 ;
 
+-(void)scanMessage:(id)arg0 outgoing:(BOOL)arg1 waitUntilDone:(BOOL)arg2 completionBlock:(id)arg3;
 
 @end
-
 
 #endif
