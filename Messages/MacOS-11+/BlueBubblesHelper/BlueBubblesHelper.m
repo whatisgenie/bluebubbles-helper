@@ -1008,7 +1008,20 @@ NSMutableArray* vettedAliases;
         } else {
             messageToSend = [messageToSend initWithSender:(nil) time:(nil) text:(message) messageSubject:(subject) fileTransferGUIDs:(nil) flags:(0x5) error:(nil) guid:(nil) subject:(nil) associatedMessageGUID:(associatedMessageGuid) associatedMessageType:*(reaction) associatedMessageRange:(range) messageSummaryInfo:(summaryInfo)];
         }
-        if (ddScan) {
+
+        if (ddScan && [[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 13) {
+            __strong typeof(messageToSend) strongMessage = messageToSend;
+            __strong typeof(chat) strongChat = chat;
+            
+            [[IMDDController sharedInstance] scanMessage:strongMessage outgoing:TRUE waitUntilDone:TRUE completionBlock:^(NSInteger status, BOOL success, id result) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [strongChat sendMessage:(strongMessage)];
+                    if (transaction != nil) {
+                        [[NetworkController sharedInstance]sendMessage:@{@"transactionId": transaction, @"identifier": [[strongChat lastSentMessage] guid]}];
+                    }
+                });
+             }];
+        } else if (ddScan) {
             [[IMDDController sharedInstance] scanMessage:messageToSend outgoing:TRUE waitUntilDone:TRUE completionBlock:^(NSObject* temp, NSObject* ddMessageToSend) {
                 [chat sendMessage:(ddMessageToSend)];
                 if (transaction != nil) {
@@ -1408,5 +1421,3 @@ ZKSwizzleInterface(BBH_IMAccount, IMAccount, NSObject)
 //}
 //
 //@end
-
-
